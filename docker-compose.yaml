@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  api:
+    build:
+      context: ./backend
+    # Expose the api service on localhost:8080,
+    # so you can test it from your machine as well.
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - mongo
+      mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    restart: always
+    environment:
+      MONGO_URI: 
+
+  test:
+    build:
+      context: ./test
+    environment:
+      API_URL: "http://api/v1/contentpass:8080"
+    command: dockerize -wait http://api/v1/contentpass:8080 npm test
